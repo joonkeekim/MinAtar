@@ -40,6 +40,7 @@ REPLAY_BUFFER_SIZE = 100000
 TARGET_NETWORK_UPDATE_FREQ = 1000
 TRAINING_FREQ = 1
 EVAL_FREQ = 5000
+EVAL_NUM = 5
 NUM_FRAMES = 5000000
 FIRST_N_FRAMES = 100000
 REPLAY_START_SIZE = 0
@@ -403,12 +404,14 @@ def dqn(env, test_env,replay_off, target_off, output_file_name, constant=50, sto
             s_prime, action, reward, is_terminated = world_dynamics(t, replay_start_size, num_actions, s, env, policy_net, constant)
 
             if t % EVAL_FREQ == 0:
-                eval_G = eval_episode(test_env, num_actions, policy_net, constant)
+                eval_G = 0
+                for _ in range(EVAL_NUM):
+                    eval_G += eval_episode(test_env, num_actions, policy_net, constant)
                 wandb.log({
-                    "eval return" : eval_G,
+                    "eval return" : numpy.around(eval_G/EVAL_NUM, 3),
                     "eval mov avg return": numpy.around(avg_return, 3)
                 },step=t)
-                logging.info("Eval Return: " + str(G) + " |Eval Avg return: " +str(numpy.around(avg_return, 2)) + " | Frame: " + str(t) )
+                logging.info("Eval Return: " + numpy.around(eval_G/EVAL_NUM, 3) + " |Eval Avg return: " +str(numpy.around(avg_return, 2)) + " | Frame: " + str(t) )
 
             RISK_LEVEL = rs.eval(t)
 
