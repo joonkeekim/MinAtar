@@ -405,7 +405,7 @@ def dqn(env, test_env, replay_off, target_off, output_file_name, store_intermedi
                     "eval return" : numpy.around(eval_G/EVAL_NUM, 3),
                     "eval mov avg return": numpy.around(avg_return, 3)
                 },step=t)
-                logging.info("Eval Return: " + numpy.around(eval_G/EVAL_NUM, 3) + " |Eval Avg return: " +str(numpy.around(avg_return, 2)) + " | Frame: " + str(t) )
+                logging.info("Eval Return: " + str(numpy.around(eval_G/EVAL_NUM, 3)) + " |Eval Avg return: " +str(numpy.around(avg_return, 2)) + " | Frame: " + str(t) )
 
             RISK_LEVEL = rs.eval(t)
 
